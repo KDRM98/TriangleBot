@@ -1,14 +1,14 @@
-{
-  "name": "guild-bot",
+﻿{
+  "name": "mabi-bot",
   "version": "1.0.0",
-  "description": "Simple Discord Bot",
-  "main": "index.js",
-  "type": "module",
+  "type": "commonjs",
+  "main": "src/index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node src/index.js",
+    "deploy": "node src/deploy-commands.js"
   },
   "dependencies": {
-    "discord.js": "^14.14.1",
-    "dotenv": "^16.4.5"
+    "discord.js": "^14.0.0",
+    "dotenv": "^16.0.0"
   }
 }

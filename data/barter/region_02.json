@@ -1,0 +1,9 @@
+﻿[
+  {
+    "region": "던바튼",
+    "npc": "상인B",
+    "gives": [{ "item": "감자", "qty": 6 }],
+    "receives": [{ "item": "가죽", "qty": 1 }],
+    "note": "주간 제한"
+  }
+]
