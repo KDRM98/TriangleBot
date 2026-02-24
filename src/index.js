@@ -1,9 +1,10 @@
-﻿require("dotenv").config();
+require("dotenv").config();
 const { Client, Collection, GatewayIntentBits } = require("discord.js");
 
 const runeCmd = require("./commands/rune");
 const barterCmd = require("./commands/barter");
 const guideCmd = require("./commands/guide");
+const { startEventNotice } = require("./lib/eventNotice");
 
 const client = new Client({
   intents: [GatewayIntentBits.Guilds]
@@ -16,6 +17,7 @@ client.commands.set(guideCmd.data.name, guideCmd);
 
 client.once("ready", () => {
   console.log(`Ready! Logged in as ${client.user.tag}`);
+  startEventNotice(client);
 });
 
 client.on("interactionCreate", async (interaction) => {
