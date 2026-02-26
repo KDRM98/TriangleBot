@@ -1,5 +1,6 @@
 const fs = require("fs");
 const path = require("path");
+const { EmbedBuilder } = require("discord.js");
 
 const DEFAULT_PERIOD_MINUTES = 36 * 60 + 15;
 const STATE_PATH = path.join(__dirname, "..", "..", "data", "system", "event_notice.json");
@@ -42,17 +43,21 @@ function getNextEventAt(baseAtMs, periodMs, nowMs = Date.now()) {
   return baseAtMs + cycles * periodMs;
 }
 
-function buildNoticeContent(nextEventAtMs, periodMinutes) {
+function buildNoticeEmbed(nextEventAtMs, periodMinutes) {
   const unix = Math.floor(nextEventAtMs / 1000);
   const hours = Math.floor(periodMinutes / 60);
   const minutes = periodMinutes % 60;
 
-  return [
-    "**TriangleBot 안내**",
-    "",
-    `다음 이벤트 시각: <t:${unix}:F>`,
-    `남은 시간: <t:${unix}:R>`
-  ].join("\n");
+  return new EmbedBuilder()
+    .setColor(0x2ecc71)
+    .setTitle("TriangleBot 안내")
+    .addFields(
+      { name: "공지사항", value: "[공지사항 적히는 부분입니다.]" },
+      { name: "이벤트 주기", value: `${hours}시간 ${minutes}분`, inline: true },
+      { name: "다음 이벤트 시각", value: `<t:${unix}:F>`, inline: true },
+      { name: "남은 시간", value: `<t:${unix}:R>`, inline: false }
+    )
+    .setFooter({ text: "이 메시지는 자동 갱신됩니다." });
 }
 
 async function ensureNoticeMessage(client, channelId, configuredMessageId) {
@@ -113,7 +118,7 @@ function startEventNotice(client) {
     try {
       const msg = await ensureNoticeMessage(client, channelId, configuredMessageId);
       const nextEventAtMs = getNextEventAt(baseAtMs, periodMs);
-      await msg.edit(buildNoticeContent(nextEventAtMs, periodMinutes));
+      await msg.edit({ content: "", embeds: [buildNoticeEmbed(nextEventAtMs, periodMinutes)] });
 
       const waitMs = Math.max(1_000, nextEventAtMs - Date.now() + 1_000);
       timer = setTimeout(update, waitMs);
